@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap');
+
+body {
+  background-color: #151515;
+  font-family: 'Merriweather', sans-serif;
+  margin: 0;
+
+  /* display: flex; */
+  /* min-height: 100vh; */
+  /* justify-content: center; */
+  /* width: 100%; */
+  color: #F5F5F5;
+}
+
+h1,
+h2,
+h3,
+h4,
+span,
+a,
+i,
+p {
+  margin: 0;
+}
+
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+address {
+  font-style: normal;
+}
+
+/* pra centralizar o menu do componente menu */
+
+/* #root, body, html, #root > div {
+  height: 100%;
+} */
