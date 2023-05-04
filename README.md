@@ -1,1 +1,1 @@
-# ⚙️ Image Filters 
+# 📖🔍 Text Informations 
