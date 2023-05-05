@@ -40,11 +40,13 @@ function App() {
   const getSentencesCount = () => {
     if (inputText.match(/[A-ZÀ-Ú].*?[.!?](\s|$)/g)) {
       return inputText.match(/[A-ZÀ-Ú].*?[.!?](\s|$)/g).length;
+    } else {
+      return 0;
     }
   };
 
   const getCharacterCount = () => {
-    return inputText.length;
+    return inputText ? inputText.length : 0;
   };
 
   const getSpacesCount = () => {
