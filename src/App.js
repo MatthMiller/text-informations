@@ -3,7 +3,7 @@ import styles from './App.module.css';
 
 function App() {
   const [inputText, setInputText] = React.useState(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    'Once the principle of government—judicial monopoly and the power to tax—is incorrectly admitted as just, any notion of restraining government power and safeguarding individual liberty and property is illusory. Under monopolistic auspices the price of justice and protection will continually rise and the quality of justice and protection fall. A tax-funded protection agency is a contradiction in terms—an expropriating property protector—and will inevitably lead to more taxes and less protection.'
   );
   const [valuesQuantity, setValuesQuantity] = React.useState({
     sentences: 0,
@@ -135,7 +135,11 @@ function App() {
                       <p className={styles.itemTerm}>{word}</p>
                       <span className={styles.itemQuantity}>{frequency}</span>
                       <span className={styles.itemPercentage}>
-                        {Math.round((valuesQuantity.words / 100) * frequency)}%
+                        {Math.round(
+                          Math.min((valuesQuantity.words / 100) * frequency) *
+                            10
+                        ) / 10}
+                        %
                       </span>
                     </li>
                   );

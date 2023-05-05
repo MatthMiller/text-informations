@@ -223,6 +223,7 @@
 .endTerms {
     background-color: #050505;
     height: 20px;
+    margin-bottom: 25px;
     border-radius: 0 0 4px 4px;
 }
 
@@ -250,14 +251,41 @@
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 750px) {
+    .generalContainer {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .textArea {
+        font-size: .875rem;
+        line-height: 1.1875rem;
+    }
+
+    .terms {
+        margin: 0 auto;
+    }
+
     .flexCounters {
         flex-direction: column;
         width: 100%;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 
     .counter {
         width: 100%;
         box-sizing: border-box;
+    }
+
+    .counter:last-of-type {
+        grid-column: 1/-1;
+    }
+}
+
+@media (max-width: 550px) {
+    .generalContainer {
+        margin-top: 25px;
     }
 }
