@@ -2,7 +2,9 @@ import React from 'react';
 import styles from './App.module.css';
 
 function App() {
-  const [inputText, setInputText] = React.useState('');
+  const [inputText, setInputText] = React.useState(
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+  );
   const [valuesQuantity, setValuesQuantity] = React.useState({
     sentences: 0,
     paragraphs: 0,
@@ -15,11 +17,11 @@ function App() {
     setValuesQuantity({
       sentences: 0,
       paragraphs: 0,
-      words: 0,
+      words: getWordsCount(),
       characters: getCharacterCount(),
-      spaces: 0,
+      spaces: getSpacesCount(),
     });
-    console.log(valuesQuantity);
+    // console.log(valuesQuantity);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputText]);
@@ -33,42 +35,117 @@ function App() {
   };
 
   const getSpacesCount = () => {
-    //     Você pode usar uma expressão regular em JavaScript para contar quantos espaços em branco (incluindo espaços, tabs e quebras de linha) existem em uma string. A expressão regular para isso é /\s/g, onde o modificador g indica que a pesquisa deve ser global e a barra invertida \s representa um caractere de espaço em branco.
-
-    // Veja um exemplo de como usar essa expressão regular para contar o número de espaços em branco em uma string:
-
-    // javascript
-    // Copy code
-    // const minhaString = 'Esta é uma string com alguns   espaços   em branco.';
-    // const numEspacos = (minhaString.match(/\s/g) || []).length;
-    // console.log(numEspacos); // Output: 8
-    // Nesse exemplo, primeiro definimos a string que queremos verificar em minhaString. Em seguida, usamos o método match() para procurar todos os caracteres de espaço em branco na string, usando a expressão regular /s/g. O método match() retorna um array com todos os caracteres de espaço em branco encontrados, ou null se nenhum foi encontrado. Para contar o número de espaços em branco, usamos o método length no array retornado, que nos dá o número de ocorrências. Se não houver nenhum espaço em branco na string, o array resultante será null, então usamos o operador || [] para garantir que sempre tenhamos um array vazio no qual podemos chamar o método length.
-
-    // No exemplo acima, o valor de numEspacos será 8, porque a string tem oito espaços em branco (incluindo os espaços duplos e tabulações).
-    return inputText.match(/\s/g) || [].length;
+    if (inputText.match(/\s/g)) {
+      return inputText.match(/\s/g).length;
+    } else {
+      return 0;
+    }
   };
 
-  // lembrete aleatorio de q existe for of
+  const getWordsCount = () => {
+    if (inputText.match(/\w+/g)) {
+      const wordsArray = inputText.match(/\w+/g);
+      return wordsArray.length;
+    } else {
+      return 0;
+    }
+  };
+
+  const getWords = () => {
+    if (inputText.match(/\w+/g)) {
+      const wordsArray = inputText.match(/[a-zA-ZÀ-ú]+/g).map((actualWord) => {
+        return actualWord.toLowerCase();
+      });
+      const wordsMap = new Map();
+      for (const actualWord of wordsArray) {
+        if (wordsMap.has(actualWord)) {
+          wordsMap.set(actualWord, wordsMap.get(actualWord) + 1);
+        } else {
+          wordsMap.set(actualWord, 1);
+        }
+      }
+
+      const wordsObjects = [];
+      for (const [word, frequency] of wordsMap) {
+        wordsObjects.push({
+          word,
+          frequency,
+        });
+      }
+
+      // Do maior para menor
+      wordsObjects.sort((a, b) => b.frequency - a.frequency);
+
+      return wordsObjects;
+    }
+  };
 
   return (
-    <main>
-      <textarea
-        onChange={handleTextChange}
-        value={inputText}
-        autoComplete='off'
-        placeholder='Insert any text here...'
-      />
-      {inputText}
-      <ul>
-        {Object.keys(valuesQuantity).map((actualKey) => {
-          return (
-            <p>
-              {actualKey}: {valuesQuantity[actualKey]}
-            </p>
-          );
-        })}
-      </ul>
-    </main>
+    <>
+      <header className={styles.header}>
+        <div>
+          <h1 className={styles.logo}>
+            <span className={styles.greenText}>/</span>
+            Text
+            <span className={styles.greenText}>/</span>
+            <span className={styles.smallText}>informations</span>
+          </h1>
+        </div>
+      </header>
+      <div className={styles.greyLine} />
+      <main className={styles.generalContainer}>
+        <div className={styles.leftSide}>
+          <textarea
+            className={styles.textArea}
+            onChange={handleTextChange}
+            value={inputText}
+            autoComplete='off'
+            placeholder='Insert any text here...'
+          />
+          <ul className={styles.flexCounters}>
+            {Object.keys(valuesQuantity).map((actualKey) => {
+              return (
+                <div className={styles.counter}>
+                  <h3 className={styles.counterTitle}>{actualKey}</h3>
+                  <p className={styles.counterNumber}>
+                    {valuesQuantity[actualKey]}
+                  </p>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+        <div className={styles.rightSide}>
+          <div className={styles.terms}>
+            <div className={styles.termsHeader}>
+              <h3 className={styles.termsMajor}>Terms</h3>
+              <span className={styles.termsMinorLabel}>Quantity</span>
+              <span className={styles.termsMinorLabel}>%</span>
+            </div>
+            <div className={styles.greyLine} />
+            <ul className={styles.termsList}>
+              {getWords() &&
+                getWords().map(({ word, frequency }) => {
+                  return (
+                    // Somar todas as quantidades
+                    // Achar qnt vale 1%, multiplicar
+                    // o numero pela percentagem aqui
+
+                    <li className={styles.item}>
+                      <p className={styles.itemTerm}>{word}</p>
+                      <span className={styles.itemQuantity}>{frequency}</span>
+                      <span className={styles.itemPercentage}>
+                        {Math.round((valuesQuantity.words / 100) * frequency)}%
+                      </span>
+                    </li>
+                  );
+                })}
+            </ul>
+            <div className={styles.endTerms}></div>
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
 
