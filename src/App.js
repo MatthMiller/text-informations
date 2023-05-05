@@ -15,19 +15,32 @@ function App() {
 
   React.useEffect(() => {
     setValuesQuantity({
-      sentences: 0,
-      paragraphs: 0,
+      sentences: getSentencesCount(),
+      paragraphs: getParagraphsCount(),
       words: getWordsCount(),
       characters: getCharacterCount(),
       spaces: getSpacesCount(),
     });
-    // console.log(valuesQuantity);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputText]);
 
   const handleTextChange = ({ target }) => {
     setInputText(target.value);
+  };
+
+  const getParagraphsCount = () => {
+    if (inputText.match(/\S.*(\n+\s*\n*)?/g)) {
+      return inputText.match(/\S.*(\n+\s*\n*)?/g).length;
+    } else {
+      return 0;
+    }
+  };
+
+  const getSentencesCount = () => {
+    if (inputText.match(/[A-ZÀ-Ú].*?[.!?](\s|$)/g)) {
+      return inputText.match(/[A-ZÀ-Ú].*?[.!?](\s|$)/g).length;
+    }
   };
 
   const getCharacterCount = () => {
@@ -43,8 +56,8 @@ function App() {
   };
 
   const getWordsCount = () => {
-    if (inputText.match(/\w+/g)) {
-      const wordsArray = inputText.match(/\w+/g);
+    const wordsArray = inputText.match(/[a-zA-ZÀ-ú]+(?:-[a-zA-ZÀ-ú]+)*/g);
+    if (wordsArray) {
       return wordsArray.length;
     } else {
       return 0;
@@ -52,10 +65,12 @@ function App() {
   };
 
   const getWords = () => {
-    if (inputText.match(/\w+/g)) {
-      const wordsArray = inputText.match(/[a-zA-ZÀ-ú]+/g).map((actualWord) => {
-        return actualWord.toLowerCase();
-      });
+    if (inputText.match(/[a-zA-ZÀ-ú]+(?:-[a-zA-ZÀ-ú]+)*/g)) {
+      const wordsArray = inputText
+        .match(/[a-zA-ZÀ-ú]+(?:-[a-zA-ZÀ-ú]+)*/g)
+        .map((actualWord) => {
+          return actualWord.toLowerCase();
+        });
       const wordsMap = new Map();
       for (const actualWord of wordsArray) {
         if (wordsMap.has(actualWord)) {
@@ -91,64 +106,69 @@ function App() {
             <span className={styles.smallText}>informations</span>
           </h1>
         </div>
+        <div className={styles.headerRight}>
+          <h1 className={styles.logo}>
+            <span className={styles.greenText}>/</span>
+            \s
+            <span className={styles.greenText}>/</span>
+            <span className={styles.smallText}>g</span>
+          </h1>
+        </div>
       </header>
       <div className={styles.greyLine} />
-      <main className={styles.generalContainer}>
-        <div className={styles.leftSide}>
-          <textarea
-            className={styles.textArea}
-            onChange={handleTextChange}
-            value={inputText}
-            autoComplete='off'
-            placeholder='Insert any text here...'
-          />
-          <ul className={styles.flexCounters}>
-            {Object.keys(valuesQuantity).map((actualKey) => {
-              return (
-                <div className={styles.counter}>
-                  <h3 className={styles.counterTitle}>{actualKey}</h3>
-                  <p className={styles.counterNumber}>
-                    {valuesQuantity[actualKey]}
-                  </p>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-        <div className={styles.rightSide}>
-          <div className={styles.terms}>
-            <div className={styles.termsHeader}>
-              <h3 className={styles.termsMajor}>Terms</h3>
-              <span className={styles.termsMinorLabel}>Quantity</span>
-              <span className={styles.termsMinorLabel}>%</span>
-            </div>
-            <div className={styles.greyLine} />
-            <ul className={styles.termsList}>
-              {getWords() &&
-                getWords().map(({ word, frequency }) => {
-                  return (
-                    // Somar todas as quantidades
-                    // Achar qnt vale 1%, multiplicar
-                    // o numero pela percentagem aqui
-
-                    <li className={styles.item}>
-                      <p className={styles.itemTerm}>{word}</p>
-                      <span className={styles.itemQuantity}>{frequency}</span>
-                      <span className={styles.itemPercentage}>
-                        {Math.round(
-                          Math.min((valuesQuantity.words / 100) * frequency) *
-                            10
-                        ) / 10}
-                        %
-                      </span>
-                    </li>
-                  );
-                })}
+      <div className={styles.generalWrapper}>
+        <main className={styles.generalContainer}>
+          <div className={styles.leftSide}>
+            <textarea
+              className={styles.textArea}
+              onChange={handleTextChange}
+              value={inputText}
+              autoComplete='off'
+              placeholder='Insert any text here...'
+            />
+            <ul className={styles.flexCounters}>
+              {Object.keys(valuesQuantity).map((actualKey) => {
+                return (
+                  <div className={styles.counter}>
+                    <h3 className={styles.counterTitle}>{actualKey}</h3>
+                    <p className={styles.counterNumber}>
+                      {valuesQuantity[actualKey]}
+                    </p>
+                  </div>
+                );
+              })}
             </ul>
-            <div className={styles.endTerms}></div>
           </div>
-        </div>
-      </main>
+          <div className={styles.rightSide}>
+            <div className={styles.terms}>
+              <div className={styles.termsHeader}>
+                <h3 className={styles.termsMajor}>Terms</h3>
+                <span className={styles.termsMinorLabel}>Quantity</span>
+                <span className={styles.termsMinorLabel}>%</span>
+              </div>
+              <div className={styles.greyLine} />
+              <ul className={styles.termsList}>
+                {getWords() &&
+                  getWords().map(({ word, frequency }) => {
+                    return (
+                      <li className={styles.item}>
+                        <p className={styles.itemTerm}>{word}</p>
+                        <span className={styles.itemQuantity}>{frequency}</span>
+                        <span className={styles.itemPercentage}>
+                          {Math.round(
+                            (frequency / valuesQuantity.words) * 100 * 10
+                          ) / 10}
+                          %
+                        </span>
+                      </li>
+                    );
+                  })}
+              </ul>
+              <div className={styles.endTerms}></div>
+            </div>
+          </div>
+        </main>
+      </div>
     </>
   );
 }

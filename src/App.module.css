@@ -6,6 +6,10 @@
     justify-content: space-between;
 }
 
+.headerRight {
+    opacity: 40%;
+}
+
 .logo {
     font-weight: 400;
     color: #F5F5F5;
@@ -31,6 +35,11 @@
     background-color: #363636;
 }
 
+.generalWrapper {
+    display: grid;
+    place-content: center;
+}
+
 .generalContainer {
     margin-top: 40px;
     display: grid;
@@ -38,6 +47,7 @@
     gap: 35px;
     margin-left: 55px;
     margin-right: 55px;
+    max-width: 1750px;
 }
 
 .leftSide {
@@ -282,10 +292,36 @@
     .counter:last-of-type {
         grid-column: 1/-1;
     }
+
+    .counterTitle {
+        font-size: 1.125rem;
+        line-height: 1;
+    }
+
+    .counterNumber {
+        font-size: 1.3125rem;
+        line-height: 1;
+    }
 }
 
 @media (max-width: 550px) {
     .generalContainer {
         margin-top: 25px;
+    }
+
+    .flexCounters {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 450px) {
+    .headerRight {
+        display: none;
+    }
+}
+
+@media (max-width: 360px) {
+    .counter {
+        padding: 19px 15px;
     }
 }
